@@ -1,6 +1,50 @@
-# gitignore template for LangChain products, e.g., LangGraph, LangSmith
-# website: https://www.langchain.com/
-# website: https://www.langchain.com/langgraph
+# =========================
+# ENV
+# =========================
+.venv/
+env/
+venv/
+.env
 
-# LangGraph
-.langgraph_api/
+# =========================
+# PYTHON CACHE
+# =========================
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+
+# =========================
+# IDE / VSCODE
+# =========================
+.vscode/
+.idea/
+
+# =========================
+# DATA (IMPORTANT ML PROJECT)
+# =========================
+data/
+logs/
+artifacts/
+*.log
+
+# =========================
+# NOTEBOOKS
+# =========================
+.ipynb_checkpoints/
+notebook/.ipynb_checkpoints/
+
+# =========================
+# HF / TORCH CACHE (très important pour toi)
+# =========================
+.cache/
+~/.cache/huggingface/
+~/.cache/torch/
+
+# =========================
+# SYSTEM
+# =========================
+.DS_Store
+Thumbs.db
