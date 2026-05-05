@@ -10,7 +10,33 @@ from config.settings  import PAGE_URL
 from utils.logger import logger
 
 def get_metadata_from_file_name(file_name: str):
+    """
+    Extrait des métadonnées structurées à partir du nom d’un fichier PDF.
 
+    Parameters
+    ----------
+    file_name : str
+        Nom du fichier PDF contenant des informations encodées
+        (séparées par des underscores).
+
+    Behavior
+    --------
+    - Supprime l’extension .pdf.
+    - Découpe le nom de fichier selon le séparateur "_".
+    - Extrait des informations sémantiques si disponibles :
+      niveau, classe, voie, filière, année.
+    - Fournit une valeur "unknown" si une information est absente.
+
+    Returns
+    -------
+    dict
+        Dictionnaire contenant les métadonnées :
+        - niveau : str
+        - classe : str
+        - voie : str
+        - filiere : str
+        - annee : str
+    """
     parts = file_name.replace(".pdf", "").split("_")
 
     return {
@@ -21,8 +47,45 @@ def get_metadata_from_file_name(file_name: str):
         "annee": parts[-1] if parts[-1].isdigit() else "unknown"
     }
 
-def load_pdfs(path_to_files): 
 
+def load_pdfs(path_to_files):
+    """
+    Charge des fichiers PDF et les transforme en documents exploitables
+    pour un pipeline RAG, avec enrichissement des métadonnées.
+
+    Parameters
+    ----------
+    path_to_files : str or pathlib.Path
+        Chemin vers le dossier contenant les fichiers PDF à ingérer.
+
+    Behavior
+    --------
+    - Vérifie l'existence du dossier d'entrée.
+    - Récupère tous les fichiers PDF du dossier.
+    - Charge chaque PDF via PyMuPDFLoader.
+    - Extrait les métadonnées à partir du nom de fichier.
+    - Ajoute des métadonnées globales (source, titre, nom fichier).
+    - Injecte ces métadonnées dans chaque page/document.
+    - Concatène tous les documents dans une liste finale.
+    - Ignore les fichiers en erreur sans bloquer le pipeline global.
+
+    Returns
+    -------
+    list
+        Liste de documents enrichis (format LangChain Document).
+
+    Raises
+    ------
+    FileNotFoundError
+        Si le dossier est introuvable ou vide.
+
+    Notes
+    -----
+    - Fonction robuste pour ingestion batch en contexte RAG.
+    - Tolérante aux erreurs de fichiers individuels.
+    - Les métadonnées sont propagées à chaque page pour
+      améliorer le retrieval et le reranking.
+    """
     path = Path(path_to_files)
 
     if not path.exists():
@@ -38,13 +101,13 @@ def load_pdfs(path_to_files):
     all_docs = []
 
     for file_path in list_of_documents_paths:
-        try :
+        try:
             loader = PyMuPDFLoader(str(file_path))
             docs = loader.load()
-    
+
             file_name = str(file_path.relative_to(PROCESSED_DIR))
             file_meta = get_metadata_from_file_name(file_name)
-            
+
             url = PAGE_URL
 
             global_meta = {
@@ -53,22 +116,23 @@ def load_pdfs(path_to_files):
                 "file_name": file_name,
                 "title": file_name.replace(".pdf", "")
             }
-            # 🔥 2. propagation à toutes les pages
-            for d in docs:
 
+            # 🔥 propagation des métadonnées à toutes les pages
+            for d in docs:
                 d.metadata = {
-                    **d.metadata,   # garde page + infos loader
-                    **global_meta   # ajoute metadata PDF
+                    **d.metadata,
+                    **global_meta
                 }
-            logger.info(f"Metadata ajoutée au fichier {file_name} avec succée !")
+
+            logger.info(f"Metadata ajoutée au fichier {file_name} avec succés !")
             all_docs.extend(docs)
+
         except Exception as e:
             logger.warning(
                 f"Fichier ignoré (ingestion RAG échouée) : {file_name} | Erreur : {str(e)}"
             )
 
-    return all_docs 
-
+    return all_docs
 
     
 

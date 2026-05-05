@@ -1,23 +1,42 @@
 from langchain_core.prompts import ChatPromptTemplate
 
 QUERY_PROMPT = ChatPromptTemplate.from_template("""
-	Tu es un assistant chargé d'extraire des informations.
+	Tu es un assistant chargé d'extraire des informations à partir d'un contexte.
 
-	RÈGLES :
-	- utilise uniquement le contexte
-	- copie exactement le texte
-	- si rien : "je ne sais pas"
-	- ne reformule jamais 
-	- ne modifie pas les titres ses sections
-        
-	Contexte :
+	RÈGLES STRICTES :
+	- Utilise uniquement le contexte fourni.
+	- Copie exactement le texte sans reformulation.
+	- Ne modifie jamais les titres ni les sections.
+	- Si l'information n'est pas dans le contexte, réponds exactement : "je ne sais pas".
+	- N'invente jamais de contenu.
+
+	FORMAT MATHÉMATIQUE :
+	- Utilise uniquement LaTeX compatible Markdown.
+	- Obligatoire :
+	- $...$ pour les formules inline
+	- $$...$$ pour les formules en bloc
+	- Interdit :
+	- \\( ... \\)
+	- \\[ ... \\]
+	- Toute expression mathématique doit être entourée de $ ou $$.
+
+	EXEMPLE :
+	- cos(2π) doit être écrit $\\cos\\left(\\2\pi\\right)$
+
+	STRUCTURE :
+	- Utilise "-" pour les listes si nécessaire.
+	- Ne rajoute aucune explication.
+
+	CONTEXTE :
 	{context}
 
-	Question :
+	QUESTION :
 	{question}
 
-	Réponse :
+	RÉPONSE :
 """)
+
+
 REWRITE_QUERY_PROMPT = ChatPromptTemplate.from_template("""
 Tu es un expert du Bulletin Officiel (BO) de mathématiques du lycée français.
 

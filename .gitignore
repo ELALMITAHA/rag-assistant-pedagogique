@@ -35,13 +35,14 @@ artifacts/
 # =========================
 .ipynb_checkpoints/
 notebook/.ipynb_checkpoints/
+notebook/
 
 # =========================
 # HF / TORCH CACHE (très important pour toi)
 # =========================
 .cache/
-~/.cache/huggingface/
-~/.cache/torch/
+huggingface/
+torch/
 
 # =========================
 # SYSTEM
