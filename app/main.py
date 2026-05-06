@@ -32,10 +32,9 @@ classe, voie, filiere = add_multiselect_lists()
 _,col,_ = st.columns((1,4,1))
 
 
-import os
-st.write("QDRANT_URL:", os.getenv("QDRANT_URL"))
-st.write("QDRANT_API_KEY:", "OK" if os.getenv("QDRANT_API_KEY") else "MISSING")
 
+import qdrant_client
+st.write(qdrant_client.__version__)
 
 with col:
     # une idée d'un petit text ici du style Poser une question sur le BO
