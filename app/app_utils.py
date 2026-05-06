@@ -40,12 +40,13 @@ def add_multiselect_lists():
     return classe, voie, filiere_list
 
 
-def is_user_choice_valide(classe,voie,filiere,path_to_pdfs=PROCESSED_DIR):
+def is_user_choice_valide(classe, voie, filiere, path_to_pdfs=PROCESSED_DIR):
+
     list_of_files = os.listdir(path_to_pdfs)
 
-    title_bo = f"BO_lycee_{classe}_{voie}_{filiere}_2026.pdf"
+    query = f"{classe}_{voie}_{filiere}"
 
-    return title_bo in list_of_files
+    return any(query in file for file in list_of_files)
     
 
     

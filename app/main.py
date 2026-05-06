@@ -67,7 +67,7 @@ with col:
             )
             st.stop()
         
-        if is_user_choice_valide(classe,voie,filiere):
+        if not is_user_choice_valide(classe,voie,filiere):
             st.warning(
                 f"Le choix {classe} , {voie} , {filiere} ne correspond à aucun BO dans la base "
             )
