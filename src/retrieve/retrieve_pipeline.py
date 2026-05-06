@@ -117,7 +117,6 @@ def retrieve(query,classe,voie,filiere,annee="2026",limit=10):
             "sources": reranked_docs[:limit]
             }
 
-
         except httpx.HTTPStatusError as e:
             if e.response.status_code == 429:
                 wait_time = 2 ** attempt 

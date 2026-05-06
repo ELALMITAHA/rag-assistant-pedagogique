@@ -71,6 +71,30 @@ def vector_store(chunks, embeddings):
         },
     )
 
+    client.create_payload_index(
+        collection_name=COLLECTION_NAME,
+        field_name="metadata.classe",
+        field_schema="keyword"
+    )
+
+    client.create_payload_index(
+        collection_name=COLLECTION_NAME,
+        field_name="metadata.voie",
+        field_schema="keyword"
+    )
+
+    client.create_payload_index(
+        collection_name=COLLECTION_NAME,
+        field_name="metadata.filiere",
+        field_schema="keyword"
+    )
+
+    client.create_payload_index(
+        collection_name=COLLECTION_NAME,
+        field_name="metadata.annee",
+        field_schema="keyword"
+    )
+
     logger.info("🧹 Collection recréée")
 
     # =============================

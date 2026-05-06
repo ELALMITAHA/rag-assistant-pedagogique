@@ -60,30 +60,6 @@ def query_vector_db(query_vector,classe,voie,filiere,annee,limit):
         api_key=os.getenv("QDRANT_API_KEY")
     )
 
-    client.create_payload_index(
-        collection_name=COLLECTION_NAME ,
-        field_name="metadata.classe",
-        field_schema="keyword"
-    )
-
-    client.create_payload_index(
-        collection_name=COLLECTION_NAME ,
-        field_name="metadata.voie",
-        field_schema="keyword"
-    )
-
-    client.create_payload_index(
-        collection_name=COLLECTION_NAME ,
-        field_name="metadata.filiere",
-        field_schema="keyword"
-    )
-
-    client.create_payload_index(
-        collection_name=COLLECTION_NAME ,
-        field_name="metadata.annee",
-        field_schema="keyword"
-    )
-
     search_results = client.query_points(
         collection_name=COLLECTION_NAME,
         query=query_vector,

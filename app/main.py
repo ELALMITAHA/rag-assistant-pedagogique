@@ -8,7 +8,6 @@ from app_utils import add_multiselect_lists
 
 from src.retrieve.retrieve_pipeline import retrieve
 
-
 # ************************************************************
 # ******************** PAGE CONFIGURATION ********************
 # ************************************************************
@@ -31,6 +30,11 @@ classe, voie, filiere = add_multiselect_lists()
 
 #  
 _,col,_ = st.columns((1,4,1))
+
+
+import os
+st.write("QDRANT_URL:", os.getenv("QDRANT_URL"))
+st.write("QDRANT_API_KEY:", "OK" if os.getenv("QDRANT_API_KEY") else "MISSING")
 
 
 with col:
