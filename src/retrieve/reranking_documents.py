@@ -1,4 +1,4 @@
-def rerank_documents(reranker,query, docs, top_k=5):
+def rerank_documents(reranker,query, docs, top_k=8):
     """
         Réordonne une liste de documents selon leur pertinence par rapport à une requête utilisateur.
 
@@ -41,7 +41,7 @@ def rerank_documents(reranker,query, docs, top_k=5):
     if not docs:
         return []
 
-    pairs = [(query, doc.page_content[:2000]) for doc in docs]
+    pairs = [(query, doc.page_content[:2500]) for doc in docs]
 
     scores = reranker.predict(pairs)
 

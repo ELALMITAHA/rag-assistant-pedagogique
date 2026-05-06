@@ -95,7 +95,7 @@ def retrieve(query,classe,voie,filiere,annee="2026",limit=10):
     # =========================================================
     # 4. RERANKING
     # =========================================================
-    reranked_docs = rerank_documents(RERANKER,rewritten_query.content, docs, top_k=3)
+    reranked_docs = rerank_documents(RERANKER,rewritten_query.content, docs, top_k=5)
 
     context = "\n\n".join(
     doc.page_content for doc in reranked_docs
