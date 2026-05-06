@@ -34,7 +34,9 @@ _,col,_ = st.columns((1,4,1))
 
 
 import qdrant_client
-st.write(importlib.metadata.version("qdrant-client"))
+from importlib.metadata import version
+
+st.write(version("qdrant-client"))
 
 with col:
     # une idée d'un petit text ici du style Poser une question sur le BO
