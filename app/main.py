@@ -4,12 +4,10 @@ from pathlib import Path
 import streamlit as st 
 
 sys.path.append(str(Path(__file__).resolve().parent.parent))
-from app_utils import add_multiselect_lists
+from app_utils import add_multiselect_lists,is_user_choice_valide
 
 from src.retrieve.retrieve_pipeline import retrieve
 
-from qdrant_client import QdrantClient
-import os 
 
 # ************************************************************
 # ******************** PAGE CONFIGURATION ********************
@@ -31,24 +29,7 @@ st.title("📚 Assistant Pédagogique BO — Réponses issues du BO")
 # Multiselect
 classe, voie, filiere = add_multiselect_lists()
 
-#  
 _,col,_ = st.columns((1,4,1))
-
-
-import requests
-import os
-import streamlit as st
-
-url = os.getenv("QDRANT_URL")
-
-st.write("URL:", url)
-
-try:
-    r = requests.get(url)
-    st.write("root status:", r.status_code)
-    st.write(r.text[:200])
-except Exception as e:
-    st.error(str(e))
 
 with col:
     # une idée d'un petit text ici du style Poser une question sur le BO
@@ -60,6 +41,10 @@ with col:
     search_clicked = st.button("🔎 Rechercher")
 
     if search_clicked:
+
+
+        if voie == "generale-et-technologique":
+            voie = "technologique"
         
         #  Vérification query
         if not query.strip():
@@ -81,9 +66,17 @@ with col:
                 "Veuillez sélectionner : " + ", ".join(missing_fields) + "."
             )
             st.stop()
+        
+        if is_user_choice_valide(classe,voie,filiere):
+            st.warning(
+                f"Le choix {classe} , {voie} , {filiere} ne correspond à aucun BO dans la base "
+            )
+            st.stop()
+
 
         with st.spinner("⏳ Requête en cours... (limite API possible)"):
             try:
+
                 results = retrieve(
                 query,
                 classe=classe,

@@ -8,7 +8,7 @@ MONTHS = {
     "octobre": "10", "novembre": "11", "décembre": "12"
 }
 
-CHUNK_SIZE = 1500 # à changer si besoin   
+CHUNK_SIZE = 2000 # à changer si besoin   
 CHUNK_OVERLAP = 200 # à changer 
 
 COLLECTION_NAME = "rag_pedagogique"

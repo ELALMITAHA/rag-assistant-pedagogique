@@ -68,3 +68,6 @@ def ingestion_pipeline():
     load_dotenv()
     embeddings = MistralAIEmbeddings(model="mistral-embed")
     vector_store(chunks,embeddings)
+
+if __name__ == "__main__":
+    ingestion_pipeline()
