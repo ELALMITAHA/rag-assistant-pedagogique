@@ -35,12 +35,19 @@ classe, voie, filiere = add_multiselect_lists()
 _,col,_ = st.columns((1,4,1))
 
 
-client = QdrantClient(
-    url=os.getenv("QDRANT_URL"),
-    api_key=os.getenv("QDRANT_API_KEY")
-)
+import requests
+import os
+import streamlit as st
 
-st.write(client.get_collections())
+url = os.getenv("QDRANT_URL") + "/collections"
+headers = {
+    "api-key": os.getenv("QDRANT_API_KEY")
+}
+
+r = requests.get(url, headers=headers)
+
+st.write(r.status_code)
+st.write(r.text)
 
 with col:
     # une idée d'un petit text ici du style Poser une question sur le BO
