@@ -86,7 +86,8 @@ with col:
                             f"(page {meta.get('page', '?')})"
                         )
 
-            except Exception:
-                st.error("🚫 Trop de requêtes. Réessaie dans quelques secondes.")
+            except Exception as e:
+                st.error(f"Erreur : {str(e)}")
+                st.exception(e)
 
 
