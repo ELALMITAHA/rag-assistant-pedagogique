@@ -8,6 +8,9 @@ from app_utils import add_multiselect_lists
 
 from src.retrieve.retrieve_pipeline import retrieve
 
+from qdrant_client import QdrantClient
+import os 
+
 # ************************************************************
 # ******************** PAGE CONFIGURATION ********************
 # ************************************************************
