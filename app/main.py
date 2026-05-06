@@ -39,15 +39,16 @@ import requests
 import os
 import streamlit as st
 
-url = os.getenv("QDRANT_URL") + "/collections"
-headers = {
-    "api-key": os.getenv("QDRANT_API_KEY")
-}
+url = os.getenv("QDRANT_URL")
 
-r = requests.get(url, headers=headers)
+st.write("URL:", url)
 
-st.write(r.status_code)
-st.write(r.text)
+try:
+    r = requests.get(url)
+    st.write("root status:", r.status_code)
+    st.write(r.text[:200])
+except Exception as e:
+    st.error(str(e))
 
 with col:
     # une idée d'un petit text ici du style Poser une question sur le BO

@@ -54,9 +54,9 @@ def query_vector_db(query_vector,classe,voie,filiere,annee,limit):
 
     
     load_dotenv(find_dotenv())
-    QDRANT_URL = "https://d782df30-8a75-466281520da9d78742b8.eu-west-2-0.aws.cloud.qdrant.io"
+
     client = QdrantClient(
-        url=QDRANT_URL,
+        url=os.getenv("QDRANT_URL"),
         api_key=os.getenv("QDRANT_API_KEY")
     )
 
