@@ -97,7 +97,11 @@ with col:
                         )
 
             except Exception as e:
-                st.error(f"Erreur : {str(e)}")
-                st.exception(e)
+                # log technique (console / fichier)
+                print(f"[ERROR] retrieve pipeline: {e}")
+
+                # message utilisateur propre
+                st.error("❌ Une erreur est survenue lors du traitement de votre demande. Veuillez réessayer.")
+                st.stop()
 
 
