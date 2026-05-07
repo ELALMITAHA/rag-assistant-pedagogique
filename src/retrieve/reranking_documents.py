@@ -1,4 +1,4 @@
-def rerank_documents(reranker,query, docs, top_k=8):
+def rerank_documents(reranker,query, docs, top_k):
     """
         Réordonne une liste de documents selon leur pertinence par rapport à une requête utilisateur.
 

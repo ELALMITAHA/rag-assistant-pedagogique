@@ -7,6 +7,8 @@ from langchain_community.document_loaders import PyMuPDFLoader
 from config.path_config import DATA_DIR,PROCESSED_DIR 
 from config.settings  import PAGE_URL
 
+from langchain_core.documents import Document
+
 from utils.logger import logger
 
 def get_metadata_from_file_name(file_name: str):
@@ -103,7 +105,10 @@ def load_pdfs(path_to_files):
     for file_path in list_of_documents_paths:
         try:
             loader = PyMuPDFLoader(str(file_path))
-            docs = loader.load()
+            pages = loader.load()
+
+            # 🔥 MODIFICATION CLÉ : concaténation du document entier
+            full_text = "\n".join([p.page_content for p in pages])
 
             file_name = str(file_path.relative_to(PROCESSED_DIR))
             file_meta = get_metadata_from_file_name(file_name)
@@ -117,19 +122,19 @@ def load_pdfs(path_to_files):
                 "title": file_name.replace(".pdf", "")
             }
 
-            # 🔥 propagation des métadonnées à toutes les pages
-            for d in docs:
-                d.metadata = {
-                    **d.metadata,
-                    **global_meta
-                }
+            # 🔥 UN SEUL Document par PDF (au lieu de 1 par page)
+            doc = Document(
+                page_content=full_text,
+                metadata=global_meta
+            )
 
-            logger.info(f"Metadata ajoutée au fichier {file_name} avec succés !")
-            all_docs.extend(docs)
+            logger.info(f"Document reconstruit (full_text) pour {file_name}")
+
+            all_docs.append(doc)
 
         except Exception as e:
             logger.warning(
-                f"Fichier ignoré (ingestion RAG échouée) : {file_name} | Erreur : {str(e)}"
+                f"Fichier ignoré (ingestion RAG échouée) : {file_path} | Erreur : {str(e)}"
             )
 
     return all_docs

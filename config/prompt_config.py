@@ -9,6 +9,11 @@ QUERY_PROMPT = ChatPromptTemplate.from_template("""
 	- Ne modifie jamais les titres ni les sections.
 	- Si l'information n'est pas dans le contexte, réponds exactement : "je ne sais pas".
 	- N'invente jamais de contenu.
+                                                
+	- Réponds uniquement avec les informations directement liées à la question.
+	- N’ajoute pas d’informations provenant d’autres sections proches.
+	- Si une section officielle correspond exactement à la question, utilise uniquement cette section.
+	- Ne fais pas de synthèse globale du document.
 
 	FORMAT MATHÉMATIQUE :
 	- Utilise uniquement LaTeX compatible Markdown.
@@ -36,28 +41,30 @@ QUERY_PROMPT = ChatPromptTemplate.from_template("""
 	RÉPONSE :
 """)
 
-
 REWRITE_QUERY_PROMPT = ChatPromptTemplate.from_template("""
-Tu es un expert du Bulletin Officiel (BO) de mathématiques du lycée français.
+Tu es un assistant de recherche dans le Bulletin Officiel (BO) de mathématiques.
 
-Ta tâche est de transformer la question d’un utilisateur en une requête optimisée pour une recherche dans un corpus du BO.
+Ta tâche est de préparer une requête STRICTEMENT lexicale pour une recherche documentaire.
 
-Le BO est structuré en sections officielles :
-- Contenus
-- Capacités attendues
-- Démonstrations
-- Exemples d’algorithmes
-- Approfondissements possibles
+RÈGLES ABSOLUES :
+- Interdiction de transformer ou compléter un concept mathématique.
+- Interdiction d’ajouter des mots comme "fonction", "par", "modélisation de" si absents.
+- Interdiction de reformulation conceptuelle.
+- Interdiction de normalisation mathématique.
 
-Règles :
-- Remplace les mots de l’utilisateur par les intitulés officiels du BO
-  (ex : "compétences" → "capacités attendues")
-- Identifie le chapitre concerné (ex : trigonométrie)
-- Ne reformule PAS librement : normalise vers le vocabulaire BO
-- Ne rajoute aucune information
-- Produit UNE seule requête optimisée pour recherche vectorielle                                             
+RÈGLE PRINCIPALE :
+👉 La requête finale doit rester aussi proche que possible de la formulation utilisateur.
 
-Question utilisateur :
+AUTORISÉ UNIQUEMENT :
+- correction orthographe
+- suppression de mots inutiles
+- réorganisation grammaticale légère sans changement de sens
+
+EXEMPLES :
+- "variation exponentielle capacités" → inchangé ou léger nettoyage
+- "quadratique capacités attendues" → inchangé ou léger nettoyage
+
+Question :
 {question}
 
 Requête BO optimisée :

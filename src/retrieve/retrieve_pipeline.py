@@ -9,7 +9,9 @@ from src.retrieve.quering_vector_db import query_vector_db
 from src.retrieve.reranking_documents import rerank_documents
 from src.retrieve.models import EMBEDDINGS, LLM, RERANKER 
 
-def retrieve(query,classe,voie,filiere,annee="2026",limit=10):
+from config.settings import LIMIT,TOP_K
+
+def retrieve(query,classe,voie,filiere,annee="2026",limit=LIMIT,top_k=TOP_K):
     """
     Exécute le pipeline complet de retrieval RAG pour répondre à une question utilisateur.
 
@@ -95,11 +97,29 @@ def retrieve(query,classe,voie,filiere,annee="2026",limit=10):
     # =========================================================
     # 4. RERANKING
     # =========================================================
-    reranked_docs = rerank_documents(RERANKER,rewritten_query.content, docs, top_k=5)
+    reranked_docs = rerank_documents(RERANKER,rewritten_query.content, docs, top_k=TOP_K)
 
-    context = "\n\n".join(
-    doc.page_content for doc in reranked_docs
-    )
+    # =========================================================
+    # 11. DEBUG
+    # =========================================================
+    # Question de l'utilisateur 
+    print("============= User query ======================")
+    print(query)
+
+    print("============= Rewrited Query ==================")
+    print(rewritten_query.content)
+
+    print("\n===== DOCS FILTRÉS =====\n")
+
+    for d in reranked_docs:
+        print(d.metadata.get("title"))
+        print(d.metadata.get("classe"), d.metadata.get("voie"))
+        print(d.page_content[:200])
+        print("------")
+
+        context = "\n\n".join(
+        doc.page_content for doc in reranked_docs
+        )
 
     # =========================================================
     # 5. LLM CALL
@@ -126,7 +146,6 @@ def retrieve(query,classe,voie,filiere,annee="2026",limit=10):
 
     raise Exception("Rate limit dépassé après plusieurs tentatives.")
   
-    
 
 
 
